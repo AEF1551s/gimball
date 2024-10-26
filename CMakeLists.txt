@@ -5,9 +5,13 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/toolchain.cmake)
 project(gimball)
 
 # The executable target
-add_executable(${PROJECT_NAME} src/main.c
+add_executable(${PROJECT_NAME} 
+                    src/main.c
+                    src/stepper.c
+                    src/delay.c
                     startup/sysmem.c
                     startup/startup.c
+
 )
 
 target_include_directories(${PROJECT_NAME} 

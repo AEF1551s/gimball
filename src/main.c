@@ -9,8 +9,9 @@ int main()
 {
 
     stepperInit();
-
-    stepperConstantFreq(200);
-
-    return 1;
+    for (int i = 0; i < 20; i++)
+    {
+        stepperConstantFreq(200, REVERSE);
+        stepperConstantFreq(200, FORWARD);
+    }
 }

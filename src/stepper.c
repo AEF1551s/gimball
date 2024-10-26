@@ -60,10 +60,6 @@ void stepperConstantFreq(int stepCount, directionTypeDef dir)
         delayMs(1);
         currentStep += dir;
         currentStep %= 4;
-        if (currentStep == 255)
-        {
-            return;
-        }
     }
 }
 

@@ -19,3 +19,9 @@ typedef struct
 {
     uint32_t stepMask[4];
 } stepperSequence;
+
+typedef enum direction
+{
+    FORWARD = 1,
+    REVERSE = -1
+} directionTypeDef;

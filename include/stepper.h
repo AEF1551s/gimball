@@ -13,6 +13,6 @@
 
 static void stepperPinInit();
 void stepperInit();
-void stepperConstantFreq(int stepCount);
+void stepperConstantFreq(int stepCount, directionTypeDef dir);
 
 #endif // STEPPER_H

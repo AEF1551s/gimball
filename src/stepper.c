@@ -11,19 +11,19 @@ static const stepper4PinConfig XStepperPins = {
 };
 
 // Set 0 and 1, reset 3
-static const uint32_t stepMask0 = (1U << XStepperPins.pins[0]) | (1U << XStepperPins.pins[1]) | ((1U << XStepperPins.pins[3]) << 16);
+static const uint32_t stepMask0 = (1U << XStepperPins.pins[0]) | (1U << XStepperPins.pins[1]) | ((1U << XStepperPins.pins[3]) << 16) | ((1U << XStepperPins.pins[2] << 16));
 // Set 1 and 2, reset 0
-static const uint32_t stepMask1 = (1U << XStepperPins.pins[1]) | (1U << XStepperPins.pins[2]) | ((1U << XStepperPins.pins[0]) << 16);
+static const uint32_t stepMask1 = (1U << XStepperPins.pins[1]) | (1U << XStepperPins.pins[2]) | ((1U << XStepperPins.pins[0]) << 16) | ((1U << XStepperPins.pins[3] << 16));
 // Set 2 and 3, reset 1
-static const uint32_t stepMask2 = (1U << XStepperPins.pins[2]) | (1U << XStepperPins.pins[3]) | ((1U << XStepperPins.pins[1]) << 16);
+static const uint32_t stepMask2 = (1U << XStepperPins.pins[2]) | (1U << XStepperPins.pins[3]) | ((1U << XStepperPins.pins[1]) << 16) | ((1U << XStepperPins.pins[0] << 16));
 // Set 3 and 0, reset 2
-static const uint32_t stepMask3 = (1U << XStepperPins.pins[3]) | (1U << XStepperPins.pins[0]) | ((1U << XStepperPins.pins[2]) << 16);
+static const uint32_t stepMask3 = (1U << XStepperPins.pins[3]) | (1U << XStepperPins.pins[0]) | ((1U << XStepperPins.pins[2]) << 16) | ((1U << XStepperPins.pins[1] << 16));
 
 static const stepperSequence sequence = {
     .stepMask = {stepMask0, stepMask1, stepMask2, stepMask3},
 };
 
-static int currentStep = 0;
+static uint8_t currentStep = 0;
 
 /* ------------END DEFINE STEPPER POLE PINS,PORTS,STEP SEQUENCE------------ */
 
@@ -52,13 +52,20 @@ void stepperInit()
     delayInit();
 }
 
-void stepperConstantFreq(int stepCount)
+void stepperConstantFreq(int stepCount, directionTypeDef dir)
 {
     for (int i = 0; i < stepCount; i++)
     {
         SET_BIT(GPIOC->BSRR, sequence.stepMask[currentStep]);
         delayMs(1);
-        currentStep++;
+        currentStep += dir;
         currentStep %= 4;
+        if (currentStep == 255)
+        {
+            return;
+        }
     }
 }
+
+//"Stride angle" is 5.625deg/64 = 0.087890625 deg per step.
+// Function to
